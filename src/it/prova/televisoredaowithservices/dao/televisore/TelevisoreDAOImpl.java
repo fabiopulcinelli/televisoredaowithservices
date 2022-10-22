@@ -121,7 +121,6 @@ public class TelevisoreDAOImpl extends AbstractMySQLDAO implements TelevisoreDAO
 			ps.setInt(3, input.getPollici());
 			// quando si fa il setDate serve un tipo java.sql.Date
 			ps.setDate(4, new java.sql.Date(input.getDataProduzione().getTime()));
-			ps.setLong(5, input.getId());
 			result = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -163,19 +162,19 @@ public class TelevisoreDAOImpl extends AbstractMySQLDAO implements TelevisoreDAO
 
 		String query = "select * from televisore where 1=1 ";
 		if (input.getMarca() != null && !input.getMarca().isEmpty()) {
-			query += " and cognome like '" + input.getMarca() + "%' ";
+			query += " and marca like '" + input.getMarca() + "%' ";
 		}
 
 		if (input.getModello() != null && !input.getModello().isEmpty()) {
-			query += " and nome like '" + input.getModello() + "%' ";
+			query += " and modello like '" + input.getModello() + "%' ";
 		}
 
 		if (input.getPollici() != 0) {
-			query += " and login like '" + input.getPollici() + "%' ";
+			query += " and pollici = '" + input.getPollici() + "%' ";
 		}
 
 		if (input.getDataProduzione() != null) {
-			query += " and DATECREATED='" + new java.sql.Date(input.getDataProduzione().getTime()) + "' ";
+			query += " and dataproduzione='" + new java.sql.Date(input.getDataProduzione().getTime()) + "' ";
 		}
 
 		try (Statement ps = connection.createStatement()) {
@@ -209,7 +208,7 @@ public class TelevisoreDAOImpl extends AbstractMySQLDAO implements TelevisoreDAO
 				.prepareStatement("SELECT * FROM televisore " + "WHERE dataproduzione > ? AND dataproduzione < ?;")) {
 			ps.setDate(1, new java.sql.Date(data1.getTime()));
 			ps.setDate(2, new java.sql.Date(data2.getTime()));
-
+			
 			try (ResultSet rs = ps.executeQuery();) {
 				if (rs.next()) {
 					Televisore teleTemp = new Televisore();
